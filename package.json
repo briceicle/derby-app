@@ -11,14 +11,25 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "coffeeify": "^3.0.1",
+    "coffeescript": "^1.12.7",
+    "compression": "^1.7.2",
+    "connect-mongo": "^2.0.1",
+    "derby": "^0.10.3",
     "d-before-unload": "^0.1.0",
     "d-bootstrap": "^0.1.0",
-    "derby": "^0.10.3",
     "derby-debug": "^0.1.0",
     "derby-parsing": "^0.7.3",
     "derby-starter": "^0.4.7",
     "derby-stylus": "^0.3.0",
-    "express": "^4.13.4",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "mongodb": "^2.2.9",
+    "racer-bundle": "^0.3.0",
+    "racer-highway": "^8.1.0",
+    "serve-favicon": "^2.5.0",
+    "sharedb-mongo": "^1.0.0-beta",
+    "sharedb-redis-pubsub": "1.0.0-beta.1",
     "showdown": "^1.8.6"
   },
   "optionalDependencies": {},
@@ -26,7 +37,7 @@
   "bugs": {
     "url": "https://github.com/briceicle/derby-app/issues"
   },
-  "main": "index.js",
+  "main": "server.js",
   "author": "Brice Nkengsa",
   "license": "MIT"
 }
