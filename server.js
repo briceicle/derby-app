@@ -7,6 +7,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var highway = require('racer-highway');
 var ShareDbMongo = require('sharedb-mongo');
+var RedisPubSub = require('sharedb-redis-pubsub');
 
 derby.use(require('racer-bundle'));
 
@@ -20,7 +21,8 @@ function setup(app, cb) {
       (process.env.MONGO_DB || 'derby-' + (app.name || 'app'));
 
   var backend = derby.createBackend({
-    db: new ShareDbMongo(mongoUrl)
+    db: new ShareDbMongo(mongoUrl),
+    pubsub: new RedisPubSub()
   });
 
   backend.on('bundle', function(browserify) {
@@ -49,15 +51,12 @@ function setup(app, cb) {
     }))
     .use(handlers.middleware)
     .use(createUserId)
+    .use(loggerMiddleware)
 
   expressApp
     // Creates an express middleware from the app's routes
     .use(app.router())
     .use(errorMiddleware)
-
-  expressApp.all('*', function(req, res, next) {
-    next('404: ' + req.url);
-  });
 
   cb(null, expressApp, handlers.upgrade);
 }
@@ -66,6 +65,11 @@ function createUserId(req, res, next) {
   var userId = req.session.userId;
   if (!userId) userId = req.session.userId = req.model.id();
   req.model.set('_session.userId', userId);
+  next();
+}
+
+function loggerMiddleware(req, res, next) {
+  console.log(`[${req.method}] [${req.url}] Request...`);
   next();
 }
 
