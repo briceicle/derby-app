@@ -77,20 +77,16 @@ errorApp.loadStyles(__dirname + '/styles/errors/reset');
 errorApp.loadStyles(__dirname + '/styles/errors/error');
 
 function errorMiddleware(err, req, res, next) {
-  if (!err) return next();
+  if (err) {
+    var message = err.message || err.toString();
+    var status = parseInt(message);
+    var page = errorApp.createPage(req, res, next);
 
-  var message = err.message || err.toString();
-  var status = parseInt(message);
-  status = ((status >= 400) && (status < 600)) ? status : 500;
-
-  if (status < 500) {
-    console.log(err.message || err);
+    console.log(err.message, err.stack);
+    page.renderStatic(status, status.toString());
   } else {
-    console.log(err.stack || err);
+    return next();
   }
-
-  var page = errorApp.createPage(req, res, next);
-  page.renderStatic(status, status.toString());
 }
 
 function run(options, cb) {
