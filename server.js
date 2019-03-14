@@ -8,17 +8,14 @@ var MongoStore = require('connect-mongo')(session);
 var highway = require('racer-highway');
 var ShareDbMongo = require('sharedb-mongo');
 var RedisPubSub = require('sharedb-redis-pubsub');
+var env = require('dotenv');
 
 derby.use(require('racer-bundle'));
+env.config();
 
 function setup(app, cb) {
-  var mongoUrl =
-    process.env.MONGO_URL ||
-    process.env.MONGOHQ_URL ||
-    'mongodb://' +
-      (process.env.MONGO_HOST || 'localhost') + ':' +
-      (process.env.MONGO_PORT || 27017) + '/' +
-      (process.env.MONGO_DB || 'derby-' + (app.name || 'app'));
+  var mongoUrl = process.env.MONGO_URL || process.env.MONGOHQ_URL;
+  console.log(mongoUrl);
 
   var backend = derby.createBackend({
     db: new ShareDbMongo(mongoUrl),
@@ -44,7 +41,7 @@ function setup(app, cb) {
     // Adds req.model
     .use(backend.modelMiddleware())
     .use(session({
-      secret: process.env.SESSION_SECRET || 'YOUR SECRET HERE'
+      secret: process.env.SESSION_SECRET
     , store: new MongoStore({url: mongoUrl})
     , resave: true
     , saveUninitialized: false
