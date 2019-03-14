@@ -112,4 +112,4 @@ function run(options, cb) {
   derby.run(createServer);
 }
 
-run({port: 8004});
+run({port: process.env.PORT});
