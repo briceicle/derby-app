@@ -14,7 +14,7 @@ derby.use(require('racer-bundle'));
 env.config();
 
 function setup(app, cb) {
-  var mongoUrl = process.env.MONGO_URL || process.env.MONGOHQ_URL;
+  var mongoUrl = process.env.MONGO_URL || process.env.MONGODB_URI;
   console.log(mongoUrl);
 
   var backend = derby.createBackend({
