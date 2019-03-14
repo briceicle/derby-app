@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var coffeeify = require('coffeeify');
 var compression = require('compression')
 var derby = require('derby');
@@ -7,19 +9,17 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var highway = require('racer-highway');
 var ShareDbMongo = require('sharedb-mongo');
+var RedisClient = require('redis').createClient(process.env.REDIS_URL)
 var RedisPubSub = require('sharedb-redis-pubsub');
-var env = require('dotenv');
 
 derby.use(require('racer-bundle'));
-env.config();
 
 function setup(app, cb) {
   var mongoUrl = process.env.MONGO_URL || process.env.MONGODB_URI;
-  console.log(mongoUrl);
 
   var backend = derby.createBackend({
     db: new ShareDbMongo(mongoUrl),
-    pubsub: new RedisPubSub()
+    pubsub: new RedisPubSub({client: RedisClient})
   });
 
   backend.on('bundle', function(browserify) {
