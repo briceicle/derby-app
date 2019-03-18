@@ -11,10 +11,14 @@ var highway = require('racer-highway');
 var ShareDbMongo = require('sharedb-mongo');
 var RedisClient = require('redis').createClient(process.env.REDIS_URL)
 var RedisPubSub = require('sharedb-redis-pubsub');
+var derbyLogin = require('derby-login');
+var bodyParser = require('body-parser');
 
 derby.use(require('racer-bundle'));
 
 function setup(app, cb) {
+  var backend, model, expressApp, handlers;
+  var publicDir = __dirname + '/public';
   var mongoUrl = process.env.MONGO_URL || process.env.MONGODB_URI;
 
   var backend = derby.createBackend({
@@ -23,51 +27,37 @@ function setup(app, cb) {
   });
 
   backend.on('bundle', function(browserify) {
-    // Add support for directly requiring coffeescript in browserify bundles
     browserify.transform(coffeeify);
   });
 
-  var publicDir = __dirname + '/public';
+  handlers = highway(backend);
 
-  var handlers = highway(backend);
-
-  var expressApp = express()
+  expressApp = express()
     .use(favicon(publicDir + '/favicon.ico'))
-    // Gzip dynamically rendered content
     .use(compression())
     .use(express.static(publicDir))
-
-  expressApp
-    // Adds req.model
     .use(backend.modelMiddleware())
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({extended: true}))
     .use(session({
-      secret: process.env.SESSION_SECRET
-    , store: new MongoStore({url: mongoUrl})
-    , resave: true
-    , saveUninitialized: false
+      secret: process.env.SESSION_SECRET,
+      store: new MongoStore({url: mongoUrl}),
+      resave: true,
+      saveUninitialized: false
     }))
+    .use(derbyLogin.middleware(backend, require('./src/login')))
     .use(handlers.middleware)
-    .use(createUserId)
-
-  expressApp
-    // Creates an express middleware from the app's routes
     .use(app.router())
     .use(errorMiddleware)
 
   expressApp.all('*', function(req, res, next) {
+    console.log(req.url, req.method, req.body);
     next('404: ' + req.url);
   });
 
   app.writeScripts(backend, publicDir, {extensions: ['.coffee']}, function(err) {
     cb(err, expressApp, handlers.upgrade);
   });
-}
-
-function createUserId(req, res, next) {
-  var userId = req.session.userId;
-  if (!userId) userId = req.session.userId = req.model.id();
-  req.model.set('_session.userId', userId);
-  next();
 }
 
 var errorApp = derby.createApp();
