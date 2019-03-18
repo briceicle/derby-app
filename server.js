@@ -90,7 +90,7 @@ function errorMiddleware(err, req, res, next) {
 }
 
 function run(options, cb) {
-  var app = require('./index');
+  var app = require('./src/index');
   var port = options.port || process.env.PORT || 3000;
 
   function listenCallback(err) {
