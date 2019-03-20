@@ -45,7 +45,6 @@ function setup(app, cb) {
       resave: true,
       saveUninitialized: false
     }))
-    .use(derbyLogin.middleware(backend, require('./src/login')))
     .use(handlers.middleware)
     .use(app.router())
     .use(errorMiddleware)
