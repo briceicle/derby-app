@@ -16,6 +16,7 @@ app.get('*', function(page, model, params, next) {
       console.log(err);
       next(err);
     } else {
+      if (userQuery.get().length == 0) return next();
       var userId = userQuery.get()[0].id;
       var user = model.at('users.' + userId);
       model.subscribe(user, function() {
