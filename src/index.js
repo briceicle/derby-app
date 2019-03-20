@@ -28,7 +28,14 @@ app.get('*', function(page, model, params, next) {
 });
 
 app.get('/', function(page, model, params, next) {
-  page.render('home');
+  var userId = model.get('_session.user').id;
+  var posts = model.query('posts', {user_id: userId});
+
+  posts.subscribe(function(err) {
+    if (err) return next(err);
+    model.ref('_page.posts', posts);
+    page.render('home');
+  });
 });
 
 app.get('/login', function(page, model, params, next) {

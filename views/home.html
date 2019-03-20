@@ -1,6 +1,21 @@
 <index:>
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Homepage</h1>
-    </div>
-  </div>
+  {{if _session.loggedIn}}
+    {{if _page.posts}}
+      <div class="container">
+        {{each _page.posts}}
+          <div class="row justify-content-center">
+            <div class="col">
+              <div class="card" style="width: 18rem;">
+                <img src="{{this.source_url}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/}}
+      </div>
+    {{else}}
+      <h3>No posts added yet.</h3>
+    {{/}}
+  {{/}}
