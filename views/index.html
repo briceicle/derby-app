@@ -1,4 +1,6 @@
 <import: src="./home">
+<import: src="./header">
+<import: src="./footer">
 <import: src="./login">
 <import: src="./register">
 <import: src="./confirmregistration">
@@ -12,13 +14,9 @@
 
 <Body:>
   <view is="d-before-unload"></view>
+  <view is="header"></view>
   <view is="{{$render.ns}}"></view>
-  <div class="container">
-    <hr>
-    <footer>
-      <p>&copy; Company 2019</p>
-    </footer>
-  </div>
+  <view is="footer"></view>
 
 <nav-link:>
   <li class="{{if $render.url === @href}}active{{/}}">
