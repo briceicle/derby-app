@@ -1,6 +1,5 @@
 var app = module.exports = require('derby').createApp('derby-app', __filename);
 app.use(require('derby-debug'));
-app.use(require('d-bootstrap'));
 app.use(require('derby-login/components/notAuth'));
 app.serverUse(module, 'derby-stylus');
 
