@@ -4,7 +4,6 @@ module.exports = {
   user: {
     id: true,
     email: true,
-    password: true
   },
   passport: {},
   strategies: {
