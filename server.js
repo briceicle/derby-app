@@ -17,7 +17,7 @@ var bodyParser = require('body-parser');
 derby.use(require('racer-bundle'));
 
 function setup(app, cb) {
-  var backend, model, expressApp, handlers;
+  var backend, expressApp, handlers;
   var publicDir = __dirname + '/public';
   var mongoUrl = process.env.MONGO_URL || process.env.MONGODB_URI;
 
