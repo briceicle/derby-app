@@ -32,12 +32,21 @@ app.get('*', function(page, model, params, next) {
 
 app.get('/', function(page, model, params, next) {
   var userId = model.get('_session.user').id;
-  var posts = model.query('posts', {user_id: userId});
+  var following = model.query('following', {follower_id: userId});
 
-  posts.subscribe(function(err) {
+  following.subscribe(function(err) {
     if (err) return next(err);
-    model.ref('_page.posts', posts);
-    page.render('home');
+
+    var followingIds = following.get().map(function(item) {
+      return item['user_id'];
+    });
+    var posts = model.query('posts', {user_id: { $in: followingIds }});
+
+    posts.subscribe(function(err) {
+      if (err) return next(err);
+      model.ref('_page.posts', posts);
+      page.render('home');
+    });
   });
 });
 

@@ -30,6 +30,10 @@ function setup(app, cb) {
     browserify.transform(coffeeify);
   });
 
+  backend.addProjection('following', 'followers', {
+    user_id: true
+  });
+
   handlers = highway(backend);
 
   expressApp = express()
