@@ -1,12 +1,14 @@
 var app = module.exports = require('derby').createApp('derby-app', __filename);
 app.use(require('derby-debug'));
 app.use(require('derby-login/components/notAuth'));
+app.use(require('../components'));
 app.serverUse(module, 'derby-stylus');
 
 app.loadViews(__dirname + '/../views');
 app.loadStyles(__dirname + '/../styles');
 
 app.component(require('d-before-unload'));
+
 
 app.get('*', function(page, model, params, next) {
   // fake user logged in by setting the first user record in DB
