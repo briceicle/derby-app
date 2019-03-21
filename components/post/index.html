@@ -1,11 +1,12 @@
 <index:>
-  <div class="row">
+  <div class="row post">
     <div class="col">
       <div class="card">
-        <img src="{{post.source_url}}" class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="row card-body">
+          <div class="col-2"><img src="{{user.avatar}}" class="avatar-sm"></div>
+          <div class="col-10"><p class="card-text">{{user.username}}</p></div>
         </div>
+        <img src="{{post.source_url}}" class="card-img-top" alt="...">
       </div>
     </div>
   </div>
