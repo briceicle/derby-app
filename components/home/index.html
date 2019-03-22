@@ -1,8 +1,8 @@
 <index:>
-  {{if _session.loggedIn}}
-    {{if _page.posts}}
+  {{if #root._session.loggedIn}}
+    {{if #root._page.posts}}
       <div class="container">
-        {{each _page.posts as #post}}
+        {{each #root._page.posts as #post}}
           <view is="post" post="{{#post}}"></view>
         {{/}}
       </div>
