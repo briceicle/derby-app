@@ -4,6 +4,9 @@ Post.prototype.name = 'post';
 Post.prototype.view = __dirname;
 
 Post.prototype.init = function(model) {
+}
+
+Post.prototype.create = function(model) {
   var userId = model.get('post').user_id;
   var user = model.root.at('users.' + userId);
 
@@ -11,9 +14,6 @@ Post.prototype.init = function(model) {
     if (err) console.log(err);
     model.ref('user', user);
   });
-}
-
-Post.prototype.create = function(model) {
 }
 
 Post.prototype.select = function(evt) {
