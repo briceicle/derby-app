@@ -50,6 +50,32 @@ app.get('/', function(page, model, params, next) {
   });
 });
 
+app.get('/:username', function(page, model, params, next) {
+  var userId = model.get('_session.user').id;
+  var posts = model.query('posts', {user_id: userId});
+  var followersCount = model.query('followers', {
+    user_id: userId
+  });
+  var followingCount = model.query('following', {
+    follower_id: userId
+  });
+
+  posts.subscribe(function(err) {
+    if (err) return next(err);
+    followersCount.subscribe(function(err) {
+      if (err) return next(err);
+      followingCount.subscribe(function(err) {
+        if (err) return next(err);
+        model.set('_page.followersCount', followersCount.get().length);
+        model.set('_page.followingCount', followingCount.get().length);
+        model.ref('_page.user', '_session.user');
+        model.ref('_page.posts', posts);
+        page.render('profile');
+      });
+    });
+  });
+});
+
 app.get('/login', function(page, model, params, next) {
   page.render('login');
 });
