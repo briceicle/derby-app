@@ -11,7 +11,6 @@ var highway = require('racer-highway');
 var ShareDbMongo = require('sharedb-mongo');
 var RedisClient = require('redis').createClient(process.env.REDIS_URL)
 var RedisPubSub = require('sharedb-redis-pubsub');
-var derbyLogin = require('derby-login');
 var bodyParser = require('body-parser');
 
 derby.use(require('racer-bundle'));
