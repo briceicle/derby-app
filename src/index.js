@@ -87,7 +87,3 @@ app.get('/register', function(page, model, params, next) {
 app.get('/confirmregistration', function(page, model, params, next) {
   page.render('confirmregistration');
 });
-
-app.proto.search = function(event) {
-  console.log(event);
-};
