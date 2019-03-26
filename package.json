@@ -42,7 +42,8 @@
     "serve-favicon": "^2.5.0",
     "sharedb-mongo": "^1.0.0-beta",
     "sharedb-redis-pubsub": "1.0.0-beta.1",
-    "showdown": "^1.8.6"
+    "showdown": "^1.8.6",
+    "superagent": "^3.0.0"
   },
   "optionalDependencies": {},
   "devDependencies": {

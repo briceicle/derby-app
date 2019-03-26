@@ -52,6 +52,28 @@ function setup(app, cb) {
     .use(app.router())
     .use(errorMiddleware)
 
+  expressApp.get('/search', function(req, res, next) {
+    var username = req.query.username;
+    var request = require('superagent');
+
+    request
+    .get(process.env.ELASTIC_SEARCH_URL + '/_search')
+    .send({
+      query: {
+        match: {
+          name: username
+        }
+      }
+    })
+    .end(function(err, _res) {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.status(200).json(_res.body.hits);
+      }
+    });
+  });
+
   expressApp.all('*', function(req, res, next) {
     console.log(req.url, req.method, req.body);
     next('404: ' + req.url);
