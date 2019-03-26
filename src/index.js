@@ -15,7 +15,6 @@ app.get('*', function(page, model, params, next) {
   var userQuery = model.query('users', {});
   userQuery.fetch(function(err) {
     if (err) {
-      console.log(err);
       next(err);
     } else {
       if (userQuery.get().length == 0) return next();
@@ -50,27 +49,34 @@ app.get('/', function(page, model, params, next) {
   });
 });
 
-app.get('/:username', function(page, model, params, next) {
-  var userId = model.get('_session.user').id;
-  var posts = model.query('posts', {user_id: userId});
-  var followersCount = model.query('followers', {
-    user_id: userId
-  });
-  var followingCount = model.query('following', {
-    follower_id: userId
-  });
+app.get('/user/:username', function(page, model, params, next) {
+  var userQuery = model.query('users', {username: params.username});
 
-  posts.subscribe(function(err) {
+  userQuery.subscribe(function(err) {
     if (err) return next(err);
-    followersCount.subscribe(function(err) {
+    if (userQuery.get().length == 0) return next();
+
+    var user = userQuery.get()[0];
+    var posts = model.query('posts', {user_id: user.id});
+    var followersCount = model.query('followers', {
+      user_id: user.id
+    });
+    var followingCount = model.query('following', {
+      follower_id: user.id
+    });
+
+    posts.subscribe(function(err) {
       if (err) return next(err);
-      followingCount.subscribe(function(err) {
+      followersCount.subscribe(function(err) {
         if (err) return next(err);
-        model.set('_page.followersCount', followersCount.get().length);
-        model.set('_page.followingCount', followingCount.get().length);
-        model.ref('_page.user', '_session.user');
-        model.ref('_page.posts', posts);
-        page.render('profile');
+        followingCount.subscribe(function(err) {
+          if (err) return next(err);
+          model.set('_page.followersCount', followersCount.get().length);
+          model.set('_page.followingCount', followingCount.get().length);
+          model.set('_page.user', user);
+          model.ref('_page.posts', posts);
+          page.render('profile');
+        });
       });
     });
   });
