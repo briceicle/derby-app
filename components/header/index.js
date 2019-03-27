@@ -16,11 +16,14 @@ Header.prototype.search = function(evt) {
       if (err) {
         console.log(err);
       } else {
-        self.model.set('_page.results', res.body.hits);
+        var results = res.body.hits.map(function(item) {
+          return item._source;
+        });
+        self.model.root.set('_page.searchResults', results);
       }
     });
   } else {
-    self.model.del('_page.results');
+    self.model.root.del('_page.searchResults');
   }
 }
 

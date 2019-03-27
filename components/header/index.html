@@ -17,7 +17,14 @@
           </div>
         </div>
         <div class="col align-center">
-            <input type="text" placeholder="Search" on-input="search($event)">
+            <div class="dropdown">
+              <input type="text" placeholder="Search" on-input="search($event)" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {{each #root._page.searchResults as #user}}
+                  <a class="dropdown-item" href="/user/{{#user.username}}">{{#user.name}}</a>
+                {{/}}
+              </div>
+            </div>
         </div>
         <div class="col">
           <div class="row justify-content-end">
