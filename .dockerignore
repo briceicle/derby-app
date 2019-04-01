@@ -1,0 +1,5 @@
+node_modules
+npm-debug.log
+public/derby
+.DS_Store
+.env
